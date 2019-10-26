@@ -37,6 +37,9 @@ def library = ext.libraries
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation(project(path: ':fruit-models-mapper'))
+    implementation(project(path: ':fruit-tools'))
+
     implementation "${library.dagger}"
     kapt "${library.daggerKapt}"
     implementation "${library.httpLogs}"

@@ -70,7 +70,7 @@ ext.libraries = [
 
         //ROOM
         room                   : "android.arch.persistence.room:runtime:" + "$version.room",
-        roomAnnotations        : "android.arch.persistence.room:compiler:" + "$version.room",
+        roomKapt               : "android.arch.persistence.room:compiler:" + "$version.room",
         roomTest               : "android.arch.persistence.room:testing:" + "$version.room",
 
         //lifecycle

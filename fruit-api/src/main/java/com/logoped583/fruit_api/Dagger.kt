@@ -13,7 +13,7 @@ import timber.log.Timber
 import javax.inject.Singleton
 
 @Module
-class ApiModule {
+internal class ApiModule {
 
     private val fruitSDK: FruitSDK = FruitSdkImpl(provideFruitApi())
 
@@ -41,7 +41,7 @@ private fun provideFruitApi(): FruitApi {
         .build().create(FruitApi::class.java) as FruitApi
 }
 
-val apiComponent = DaggerApiComponent.builder()
+val apiComponent: ApiComponent = DaggerApiComponent.builder()
     .apiModule(ApiModule())
     .build()
 

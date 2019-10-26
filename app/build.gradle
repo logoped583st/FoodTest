@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    dataBinding {
+        enabled = true
+    }
 }
 
 kapt {
@@ -31,15 +35,29 @@ def library = ext.libraries
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    implementation(project(path: ':fruit-api'))
+    implementation(project(path: ':fruit-tools'))
+    implementation(project(path: ':fruit-custom-view'))
+    implementation(project(path: ':fruit-models-mapper'))
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation "${library.dagger}"
     implementation "${library.daggerAndroid}"
     kapt "${library.daggerKapt}"
     kapt "${library.kaptDaggerAndroid}"
+    implementation "${library.rxjava}"
+    implementation "${library.rxandroid}"
+    implementation "${library.timber}"
+    implementation "${library.paging}"
+    implementation "${library.cicerone}"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
+    kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    implementation 'androidx.recyclerview:recyclerview:1.0.0'
 }

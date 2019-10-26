@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.logoped583.fruit.presentation.frutlist.FruitListViewModel" />
+    </data>
+
+
+    <com.example.fruit_cusom_view.list.BaseListConstraint
+        android:id="@+id/list_constraint"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:animateLayoutChanges="true"
+        android:focusableInTouchMode="true"
+        app:state="@{viewModel.state}" />
+
+</layout>
