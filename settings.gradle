@@ -1,0 +1,5 @@
+rootProject.name='fruit'
+include ':app'
+include ':fruit-tools'
+include ':fruit-api'
+include ':fruit-dao'
