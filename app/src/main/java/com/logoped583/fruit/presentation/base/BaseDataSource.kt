@@ -2,29 +2,31 @@ package com.logoped583.fruit.presentation.base
 
 import androidx.paging.PageKeyedDataSource
 import com.logoped583.fruit_tools.*
+import com.logoped583.fruit_tools.utils.mapErrors
+import com.logoped583.fruit_tools.utils.retryIfTimeOut
 import io.reactivex.Single
 import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
 
-/**
- *  DO NOT APPLY SCHEDULERS FOR RX SINGLES
- *  BY DEFAULT DATASOURCE USING IO SCHEDULER FOR FETCH DATA
- */
-
 abstract class BaseDataSource<R : ListResponse<I>, I : ItemResponse> :
-    PageKeyedDataSource<String, I>(),
+    PageKeyedDataSource<Int, I>(),
     IBaseDataSource<R, I> {
 
-    private val compositeDisposable = CompositeDisposable()
+    protected val compositeDisposable = CompositeDisposable()
 
     override var isRefresh = false
 
     override val loadingStateImpl: LoadingStateObservable<List<I>, CustomExceptions> =
         LoadingStateObservable()
 
+    abstract val networkListener: NetworkListener
+
+    abstract val initialDbCall: Single<R>
+
     override fun loadInitial(
-        params: LoadInitialParams<String>,
-        callback: LoadInitialCallback<String, I>
+        params: LoadInitialParams<Int>,
+        callback: LoadInitialCallback<Int, I>
     ) {
         if (isRefresh) {
             loadingStateImpl.refresh()
@@ -34,30 +36,40 @@ abstract class BaseDataSource<R : ListResponse<I>, I : ItemResponse> :
         }
 
         compositeDisposable.add(
-            apiCall
+            networkListener.networkAvailable
+                .first(true)
+                .mapErrors {
+                    loadingStateImpl.onError(it)
+                }
+                .flatMap {
+                    if (it) {
+                        apiCall.subscribeOn(Schedulers.io())
+                    } else {
+                        initialDbCall.subscribeOn(Schedulers.io())
+                    }
+                }.retryIfTimeOut()
                 .subscribe({
                     loadingStateImpl.dataReceived(it.items)
-                    callback.onResult(it.items, null, null)
+                    onInitialResult(it, callback)
                 }, {
                     Timber.e(it.message)
                 })
         )
     }
 
-
-    override fun loadAfter(params: LoadParams<String>, callback: LoadCallback<String, I>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, I>) {
         compositeDisposable.add(
             loadNextPage(params.key)
                 .subscribe({
-                    // callback.onResult(it, null)
+                    onResult(it, callback)
                 }, {
                     Timber.e(it.message)
                 })
         )
     }
 
-    override fun loadBefore(params: LoadParams<String>, callback: LoadCallback<String, I>) {
-        Timber.e("LOAD BEFORE")
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, I>) {
+
     }
 
     override fun invalidate() {
@@ -67,6 +79,10 @@ abstract class BaseDataSource<R : ListResponse<I>, I : ItemResponse> :
 }
 
 interface IBaseDataSource<R : ListResponse<I>, I : ItemResponse> {
+
+    fun onInitialResult(response: R, callback: PageKeyedDataSource.LoadInitialCallback<Int, I>)
+
+    fun onResult(response: List<I>, callback: PageKeyedDataSource.LoadCallback<Int, I>)
 
     var isRefresh: Boolean
 
@@ -78,5 +94,5 @@ interface IBaseDataSource<R : ListResponse<I>, I : ItemResponse> {
 
     val apiCall: Single<R>
 
-    fun loadNextPage(url: String): Single<R>
+    fun loadNextPage(offset: Int): Single<List<I>>
 }

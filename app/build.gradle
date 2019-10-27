@@ -40,18 +40,23 @@ dependencies {
     implementation(project(path: ':fruit-tools'))
     implementation(project(path: ':fruit-custom-view'))
     implementation(project(path: ':fruit-models-mapper'))
+    implementation(project(path: ':fruit-dao'))
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation "${library.dagger}"
     implementation "${library.daggerAndroid}"
     kapt "${library.daggerKapt}"
     kapt "${library.kaptDaggerAndroid}"
     implementation "${library.rxjava}"
     implementation "${library.rxandroid}"
+    implementation "${library.rxBindingSwipeRefresh}"
     implementation "${library.timber}"
     implementation "${library.paging}"
     implementation "${library.cicerone}"
+    implementation "${library.glide}"
+    kapt "${library.glideKapt}"
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     kapt 'androidx.lifecycle:lifecycle-compiler:2.0.0'
     implementation 'androidx.core:core-ktx:1.1.0'

@@ -10,13 +10,12 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.transition.Slide
 import androidx.transition.TransitionManager
-
 import kotlinx.android.synthetic.main.loading_view.view.*
 
 
-const val SUPER_STATE = "SUPER_STATE"
+private const val SUPER_STATE = "SUPER_STATE"
 
-const val VIEW_VISIBILITY = "VIEW_VISIBILITY"
+private const val VIEW_VISIBILITY = "VIEW_VISIBILITY"
 
 
 class LoadingView : ConstraintLayout {

@@ -7,12 +7,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import io.reactivex.disposables.CompositeDisposable
 
-abstract class BaseBindingFragment<V : ViewModel, D : ViewDataBinding> : Fragment() {
+abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBinding> : Fragment() {
 
     protected val disposable: CompositeDisposable = CompositeDisposable()
 
@@ -61,6 +60,10 @@ abstract class BaseBindingFragment<V : ViewModel, D : ViewDataBinding> : Fragmen
         FRAGMENT
     }
 
+    override fun onDestroyView() {
+        disposable.clear()
+        super.onDestroyView()
+    }
 
     abstract fun applyBinding()
 

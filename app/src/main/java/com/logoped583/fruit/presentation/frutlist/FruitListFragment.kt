@@ -1,5 +1,6 @@
 package com.logoped583.fruit.presentation.frutlist
 
+import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.fruit_models_mapper.FruitDbEntity
 import com.example.fruit_models_mapper.FruitResponse
@@ -7,11 +8,16 @@ import com.logoped583.fruit.Injectable
 import com.logoped583.fruit.R
 import com.logoped583.fruit.databinding.FragmentFruitListBinding
 import com.logoped583.fruit.presentation.base.BaseListFragment
+import kotlinx.android.synthetic.main.fragment_fruit_list.*
 import javax.inject.Inject
 
 class FruitListFragment :
     BaseListFragment<FruitResponse, FruitDbEntity, FruitListViewModel, FragmentFruitListBinding>(),
     Injectable {
+
+    override val click: FruitDbEntity.(View) -> Unit = {
+
+    }
 
     @Inject
     override lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -30,6 +36,7 @@ class FruitListFragment :
 
     override fun applyBinding() {
         binding.viewModel = viewModel
+        binding.viewGroupAnim = list_constraint
     }
 
 }

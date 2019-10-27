@@ -13,7 +13,7 @@ import javax.inject.Provider
 
 abstract class BaseDataSourceFactory<R : ListResponse<I>, I : ItemResponse>
     (override val dataSourceProvider: Provider<out BaseDataSource<R, I>>)
-    : DataSource.Factory<String, I>(), IBaseDataSourceFactory<R, I> {
+    : DataSource.Factory<Int, I>(), IBaseDataSourceFactory<R, I> {
 
     private val stateImpl = MutableLiveData<LoadingStateSealed<List<I>, CustomExceptions>>()
 
@@ -24,10 +24,9 @@ abstract class BaseDataSourceFactory<R : ListResponse<I>, I : ItemResponse>
     private val compositeDisposable = CompositeDisposable()
 
 
-    override fun create(): DataSource<String, I> {
+    override fun create(): DataSource<Int,I> {
         dataSource = dataSourceProvider.get()
         dataSource.isRefresh = isRefresh
-
 
         compositeDisposable.add(dataSource.loadingStateImpl.state
             .observeOn(AndroidSchedulers.mainThread())
@@ -52,8 +51,6 @@ interface IBaseDataSourceFactory<R : ListResponse<I>, I : ItemResponse> {
     val dataSourceProvider: Provider<out IBaseDataSource<R, I>>
 
     fun invalidate()
-
-    fun create(): DataSource<String, I>
 
     val state: LiveData<LoadingStateSealed<List<I>, CustomExceptions>>
 }

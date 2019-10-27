@@ -5,5 +5,9 @@
             <enum name="linear" value="0" />
             <enum name="grid" value="1" />
         </attr>
+
+        <attr name="column_count" format="integer"/>
+        <attr name="vertical_margin" format="integer"/>
+        <attr name="horizontal_margin" format="integer"/>
     </declare-styleable>
 </resources>

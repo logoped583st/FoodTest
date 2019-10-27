@@ -1,6 +1,7 @@
 package com.logoped583.fruit_tools
 
 import androidx.lifecycle.MutableLiveData
+import io.reactivex.Observable
 import io.reactivex.subjects.BehaviorSubject
 
 sealed class LoadingStateSealed<DATA, ERROR> {
@@ -10,6 +11,8 @@ sealed class LoadingStateSealed<DATA, ERROR> {
     data class Error<DATA, ERROR>(val error: ERROR) : LoadingStateSealed<DATA, ERROR>()
     class Refresh<DATA, ERROR> : LoadingStateSealed<DATA, ERROR>()
 }
+
+
 
 class LoadingStateLiveData<DATA, ERROR> {
 
@@ -23,10 +26,12 @@ class LoadingStateLiveData<DATA, ERROR> {
 
 class LoadingStateObservable<DATA, ERROR> {
 
-    val state = BehaviorSubject.create<LoadingStateSealed<DATA, ERROR>>()
+    internal val stateImpl = BehaviorSubject.create<LoadingStateSealed<DATA, ERROR>>()
+
+    val state: Observable<LoadingStateSealed<DATA, ERROR>> = stateImpl.serialize()
 
     init {
-        state.onNext(LoadingStateSealed.Start())
+        stateImpl.onNext(LoadingStateSealed.Start())
     }
 }
 
@@ -43,17 +48,17 @@ fun <T, C : CustomExceptions> LoadingStateLiveData<T, C>.onError(error: C) {
 }
 
 fun <T, C : CustomExceptions> LoadingStateObservable<T, C>.startLoading() {
-    state.onNext(LoadingStateSealed.Loading())
+    stateImpl.onNext(LoadingStateSealed.Loading())
 }
 
 fun <T, C : CustomExceptions> LoadingStateObservable<T, C>.refresh() {
-    state.onNext(LoadingStateSealed.Refresh())
+    stateImpl.onNext(LoadingStateSealed.Refresh())
 }
 
 fun <T, C : CustomExceptions> LoadingStateObservable<T, C>.dataReceived(data: T) {
-    state.onNext(LoadingStateSealed.Data(data))
+    stateImpl.onNext(LoadingStateSealed.Data(data))
 }
 
 fun <T, C : CustomExceptions> LoadingStateObservable<T, C>.onError(error: C) {
-    state.onNext(LoadingStateSealed.Error(error))
+    stateImpl.onNext(LoadingStateSealed.Error(error))
 }

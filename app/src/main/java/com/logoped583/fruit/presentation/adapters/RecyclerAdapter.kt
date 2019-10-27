@@ -1,6 +1,7 @@
 package com.logoped583.fruit.presentation.adapters
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.databinding.DataBindingUtil
@@ -12,7 +13,7 @@ import com.logoped583.fruit_tools.ItemResponse
 import com.logoped583.fruit_tools.diffUtil
 
 
-class RecyclerAdapter<T : ItemResponse>(@LayoutRes private val itemContainer: Int) :
+class RecyclerAdapter<T : ItemResponse>(@LayoutRes private val itemContainer: Int, val click: T.(View) -> Unit) :
     PagedListAdapter<T, ViewHolder<T>>(diffUtil<T>()) {
 
 
@@ -25,20 +26,22 @@ class RecyclerAdapter<T : ItemResponse>(@LayoutRes private val itemContainer: In
         val binding: ViewDataBinding =
             DataBindingUtil.inflate(layoutInflater, itemContainer, parent, false)
 
-        return ViewHolder(binding)
+        return ViewHolder(binding, click)
     }
+
 
 }
 
 
-class ViewHolder<T>(private val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+class ViewHolder<T>(private val binding: ViewDataBinding, val click: T.(View) -> Unit) :
+    RecyclerView.ViewHolder(binding.root) {
 
     fun bind(item: T?) {
-        binding.setVariable(BR._all, item)
+        binding.setVariable(BR.model, item)
         binding.executePendingBindings()
         binding.root.setOnClickListener { view ->
             item?.let {
-
+                item.click(view)
             }
         }
     }

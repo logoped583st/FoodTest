@@ -5,6 +5,10 @@
     <data>
 
         <variable
+            name="viewGroupAnim"
+            type="android.view.ViewGroup" />
+
+        <variable
             name="viewModel"
             type="com.logoped583.fruit.presentation.frutlist.FruitListViewModel" />
     </data>
@@ -16,6 +20,21 @@
         android:layout_height="match_parent"
         android:animateLayoutChanges="true"
         android:focusableInTouchMode="true"
-        app:state="@{viewModel.state}" />
+        app:column_count="2"
+        app:horizontal_margin="8"
+        app:layout_manager="grid"
+        app:state="@{viewModel.state}"
+        app:vertical_margin="8">
+
+        <include
+            layout="@layout/loading_view"
+            app:groupView="@{viewGroupAnim}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:loadingState="@{viewModel.state}" />
+
+    </com.example.fruit_cusom_view.list.BaseListConstraint>
+
 
 </layout>

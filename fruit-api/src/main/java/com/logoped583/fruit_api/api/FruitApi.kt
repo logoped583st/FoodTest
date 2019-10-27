@@ -1,6 +1,6 @@
 package com.logoped583.fruit_api.api
 
-import com.example.fruit_models_mapper.FruitDetailsResponse
+import com.example.fruit_models_mapper.FruitDetailsDbEntity
 import com.example.fruit_models_mapper.FruitResponse
 import io.reactivex.Single
 import retrofit2.http.GET
@@ -12,6 +12,6 @@ interface FruitApi {
     fun getFruits(): Single<FruitResponse>
 
     @GET("cart/{id}/detail")
-    fun getFruitDetails(@Path("id") id: String): Single<FruitDetailsResponse>
+    fun getFruitDetails(@Path("id") id: String): Single<FruitDetailsDbEntity>
 
 }

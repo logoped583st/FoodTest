@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.fruit_cusom_view.R
 import com.example.fruit_cusom_view.databinding.BaseListConstraintBinding
 import com.logoped583.fruit_tools.LoadingStateSealed
-import kotlinx.android.synthetic.main.base_list_constraint.view.*
+import com.logoped583.fruit_tools.databinding.recycler.marginDecorationDp
 
 class BaseListConstraint : ConstraintLayout {
 
@@ -46,10 +46,16 @@ class BaseListConstraint : ConstraintLayout {
             this,
             true
         )
-        mBinding.viewGroupAnim = view_group
         val ta = context.obtainStyledAttributes(attrs, R.styleable.BaseListConstraint, 0, 0)
         val manager = ta.getInt(R.styleable.BaseListConstraint_layout_manager, 0)
-        mBinding.rv.layoutManager = LayoutManager.values()[manager].getLayoutManager(context)
+        val columnCount = ta.getInt(R.styleable.BaseListConstraint_column_count, 0)
+        val verticalMargin = ta.getInt(R.styleable.BaseListConstraint_vertical_margin, 0)
+        val horizontalMargin =
+            ta.getInt(R.styleable.BaseListConstraint_horizontal_margin, 0)
+        mBinding.rv.layoutManager =
+            LayoutManager.values()[manager].getLayoutManager(context, columnCount)
+
+        mBinding.rv.marginDecorationDp(verticalMargin, horizontalMargin, columnCount, manager == 1)
         mBinding.rv.verticalScrollbarPosition = right
         mBinding.rv.isVerticalScrollBarEnabled = true
 
@@ -59,15 +65,24 @@ class BaseListConstraint : ConstraintLayout {
 
     enum class LayoutManager {
         LINEAR {
-            override fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
+            override fun getLayoutManager(
+                context: Context,
+                columnCount: Int
+            ): RecyclerView.LayoutManager =
                 LinearLayoutManager(context)
         },
         GRID {
-            override fun getLayoutManager(context: Context): RecyclerView.LayoutManager =
-                GridLayoutManager(context, 0)
+            override fun getLayoutManager(
+                context: Context,
+                columnCount: Int
+            ): RecyclerView.LayoutManager =
+                GridLayoutManager(context, columnCount)
         };
 
-        abstract fun getLayoutManager(context: Context): RecyclerView.LayoutManager
+        abstract fun getLayoutManager(
+            context: Context,
+            columnCount: Int
+        ): RecyclerView.LayoutManager
     }
 
 

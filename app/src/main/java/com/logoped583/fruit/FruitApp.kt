@@ -9,6 +9,7 @@ import androidx.fragment.app.FragmentManager
 import com.logoped583.fruit.di.DaggerMainComponent
 import com.logoped583.fruit.di.GlobalModule
 import com.logoped583.fruit_api.apiComponent
+import com.logoped583.fruit_dao.daoComponent
 import dagger.android.AndroidInjection
 import dagger.android.AndroidInjector
 import dagger.android.DispatchingAndroidInjector
@@ -33,7 +34,13 @@ class FruitApp : Application(), HasAndroidInjector {
         }
 
         DaggerMainComponent.builder()
-            .apiComponent(GlobalModule(apiComponent))
+            .apiComponent(
+                GlobalModule(
+                    apiComponent(),
+                    daoComponent(applicationContext),
+                    applicationContext
+                )
+            )
             .build()
             .inject(this)
 

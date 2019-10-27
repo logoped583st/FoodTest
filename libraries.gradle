@@ -7,7 +7,7 @@ ext.version = [
         rxjava                 : "2.2.8",
         retrofit2Rxjava2Adapter: "1.0.0",
         rxandroid              : "2.0.2",
-        rxbinding              : "2.1.1",
+        rxBinding              : "3.0.0",
 
         //RETROFIT
         okhttpLibVersion       : "3.4.2",
@@ -26,7 +26,7 @@ ext.version = [
         cicerone               : "5.0.0",
 
         //ROOM
-        room                   : "1.1.1",
+        room                   : "2.2.0",
 
         //DATABINDING
         dataBinding            : "3.1.0",
@@ -48,9 +48,9 @@ ext.libraries = [
         rxjava                 : "io.reactivex.rxjava2:rxjava:" + "$version.rxjava",
         retrofit2Rxjava2Adapter: "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:" + "$version.retrofit2Rxjava2Adapter",
         rxandroid              : "io.reactivex.rxjava2:rxandroid:" + "$version.rxandroid",
-        rxbinding              : "com.jakewharton.rxbinding2:rxbinding-kotlin:" + "$version.rxbinding",
-        rxbindingSup4          : "com.jakewharton.rxbinding2:rxbinding-support-v4-kotlin:" + "$version.rxbinding",
-        rxbindingSup7          : "com.jakewharton.rxbinding2:rxbinding-appcompat-v7-kotlin:" + "$version.rxbinding",
+        rxBinding              : "com.jakewharton.rxbinding3:rxbinding:" + "$version.rxBinding",
+        rxBindingCore          : "com.jakewharton.rxbinding3:rxbinding-core:" + "$version.rxBinding",
+        rxBindingSwipeRefresh  : "com.jakewharton.rxbinding3:rxbinding-swiperefreshlayout:" + "$version.rxBinding",
 
         //Timber
         timber                 : "com.jakewharton.timber:timber:" + "$version.timber",
@@ -63,13 +63,15 @@ ext.libraries = [
 
         //GLIDE
         glide                  : "com.github.bumptech.glide:glide:" + "$version.glide",
-        glideCompiler          : "com.github.bumptech.glide:compiler:" + "$version.glide",
+        glideKapt              : "com.github.bumptech.glide:compiler:" + "$version.glide",
 
         //cicerone
         cicerone               : "ru.terrakok.cicerone:cicerone:" + "$version.cicerone",
 
         //ROOM
         room                   : "android.arch.persistence.room:runtime:" + "$version.room",
+        roomRxJava             : "androidx.room:room-rxjava2:$version.room",
+        roomKtx                : "androidx.room:room-ktx:$version.room",
         roomKapt               : "android.arch.persistence.room:compiler:" + "$version.room",
         roomTest               : "android.arch.persistence.room:testing:" + "$version.room",
 

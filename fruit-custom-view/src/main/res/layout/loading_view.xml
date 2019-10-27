@@ -30,7 +30,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Loading"
+            android:text="@string/network_loading"
             android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"

@@ -1,5 +1,6 @@
 package com.logoped583.fruit.presentation.base
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
@@ -12,8 +13,10 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
 abstract class BaseListLoadingViewModel<R : ListResponse<I>, I : ItemResponse>(
-    private val factory: BaseDataSourceFactory<R, I>
-) : BaseDisposableViewModel(), IBaseLoadingViewModel<List<I>> {
+    private val factory: BaseDataSourceFactory<R, I>,
+    context: Context,
+    networkListener: NetworkListener
+) : BaseDisposableViewModel(context, networkListener), IBaseLoadingViewModel<List<I>> {
 
     override val state = factory.state
 
@@ -39,8 +42,10 @@ abstract class BaseListLoadingViewModel<R : ListResponse<I>, I : ItemResponse>(
     }
 }
 
-abstract class BaseLoadingViewModel<Response> : BaseDisposableViewModel(),
+abstract class BaseLoadingViewModel<Response>(context: Context, networkListener: NetworkListener) :
+    BaseDisposableViewModel(context, networkListener),
     IBaseLoadingViewModel<Response> {
+
 
     private val loadingState = LoadingStateLiveData<Response, CustomExceptions>()
 
@@ -67,7 +72,8 @@ abstract class BaseLoadingViewModel<Response> : BaseDisposableViewModel(),
 
 }
 
-abstract class BaseDisposableViewModel : ViewModel() {
+abstract class BaseDisposableViewModel(val context: Context, networkListener: NetworkListener) :
+    ViewModel() {
 
     val compositeDisposable = CompositeDisposable()
 

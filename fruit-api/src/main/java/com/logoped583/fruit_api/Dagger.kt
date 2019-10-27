@@ -41,7 +41,7 @@ private fun provideFruitApi(): FruitApi {
         .build().create(FruitApi::class.java) as FruitApi
 }
 
-val apiComponent: ApiComponent = DaggerApiComponent.builder()
+fun apiComponent(): ApiComponent = DaggerApiComponent.builder()
     .apiModule(ApiModule())
     .build()
 
