@@ -12,10 +12,10 @@ import java.util.concurrent.TimeUnit
 internal class FruitSdkImpl(private val fruitApi: FruitApi) : FruitSDK {
 
     override fun getFruits(): Single<FruitResponse> =
-        fruitApi.getFruits().delay(2, TimeUnit.SECONDS)
+        fruitApi.getFruits().delaySubscription(2, TimeUnit.SECONDS)
 
     override fun getFruitDetails(id: String): Single<FruitDetailsDbEntity> =
-        fruitApi.getFruitDetails(id).delay(2, TimeUnit.SECONDS)
+        fruitApi.getFruitDetails(id).delaySubscription(2, TimeUnit.SECONDS)
 
 }
 

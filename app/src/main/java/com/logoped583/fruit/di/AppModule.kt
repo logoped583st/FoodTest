@@ -3,6 +3,7 @@ package com.logoped583.fruit.di
 import androidx.appcompat.app.AppCompatActivity
 import com.logoped583.fruit.MainActivity
 import com.logoped583.fruit.NetworkChangedBroadcastReceiver
+import com.logoped583.fruit.presentation.fruifdetails.FruitDetailsFragment
 import com.logoped583.fruit.presentation.frutlist.FruitListFragment
 import dagger.Binds
 import dagger.Module
@@ -38,6 +39,10 @@ abstract class AppModule {
         @FragmentScope
         @ContributesAndroidInjector(modules = [FruitListModule::class])
         abstract fun fruitListFragmentInjector(): FruitListFragment
+
+        @FragmentScope
+        @ContributesAndroidInjector(modules = [FruitDetailsModule::class])
+        abstract fun fruitDetailsFragmentInjector(): FruitDetailsFragment
 
     }
 }

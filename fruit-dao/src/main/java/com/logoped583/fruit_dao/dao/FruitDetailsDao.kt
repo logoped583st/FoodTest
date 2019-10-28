@@ -1,6 +1,8 @@
 package com.logoped583.fruit_dao.dao
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.fruit_models_mapper.FruitDetailsDbEntity
 import io.reactivex.Single
@@ -16,4 +18,7 @@ interface FruitDetailsDao {
 
     @Query("DELETE FROM FRUIT_DETAILS where fruit_id NOT IN (SELECT FRUITS.fruit_id FROM FRUITS)")
     fun removeUnusedDescriptions()
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insertFruitDescription(detailsDbEntity: FruitDetailsDbEntity)
 }

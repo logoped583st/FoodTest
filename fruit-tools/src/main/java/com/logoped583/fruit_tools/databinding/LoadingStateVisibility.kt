@@ -13,9 +13,7 @@ fun LoadingStateSealed<*, *>.loadingStateVisibility(): Boolean {
 
 @BindingAdapter("refreshing")
 fun SwipeRefreshLayout.refresh(visibility: LoadingStateSealed<*, *>?) {
-    when (visibility) {
-        is LoadingStateSealed.Data -> {
-            isRefreshing = false
-        }
+    if (visibility !is LoadingStateSealed.Refresh) {
+        isRefreshing = false
     }
 }

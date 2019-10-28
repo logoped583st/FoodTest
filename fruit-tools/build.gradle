@@ -32,6 +32,7 @@ android {
 }
 
 def library = ext.libraries
+// TODO CHANGE ALL LIBRARIES WITH ${library.zzz} exclude duplicates
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -39,11 +40,17 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.core:core-ktx:1.1.0'
     implementation "${library.rxjava}"
+    implementation "${library.rxandroid}"
     implementation "${library.retrofit}"
     implementation "${library.paging}"
     implementation "${library.glide}"
     kapt "${library.glideKapt}"
     implementation "${library.timber}"
+    implementation "${library.room}"
+    implementation "${library.roomKtx}"
+    implementation "${library.roomRxJava}"
+    kapt "${library.roomKapt}"
+    implementation "${library.roomTest}"
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'

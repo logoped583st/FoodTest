@@ -1,7 +1,7 @@
 package com.logoped583.fruit.presentation.base
 
-import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
@@ -9,16 +9,17 @@ import com.logoped583.fruit_tools.*
 import com.logoped583.fruit_tools.constants.listPagedConfig
 import com.logoped583.fruit_tools.utils.mapErrors
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
+import io.reactivex.schedulers.Schedulers
 
 abstract class BaseListLoadingViewModel<R : ListResponse<I>, I : ItemResponse>(
     private val factory: BaseDataSourceFactory<R, I>,
-    context: Context,
     networkListener: NetworkListener
-) : BaseDisposableViewModel(context, networkListener), IBaseLoadingViewModel<List<I>> {
+) : BaseDisposableViewModel(networkListener), IBaseLoadingViewModel<List<I>> {
 
-    override val state = factory.state
+    override val state get() = factory.state
 
     val dataSource: LiveData<PagedList<I>> =
         LivePagedListBuilder(factory, listPagedConfig)
@@ -42,8 +43,8 @@ abstract class BaseListLoadingViewModel<R : ListResponse<I>, I : ItemResponse>(
     }
 }
 
-abstract class BaseLoadingViewModel<Response>(context: Context, networkListener: NetworkListener) :
-    BaseDisposableViewModel(context, networkListener),
+abstract class BaseLoadingViewModel<Response>(networkListener: NetworkListener) :
+    BaseDisposableViewModel(networkListener),
     IBaseLoadingViewModel<Response> {
 
 
@@ -53,8 +54,8 @@ abstract class BaseLoadingViewModel<Response>(context: Context, networkListener:
         loadingState.state
 
     protected fun Single<Response>.loadingSubscriber(
-        onSuccess: (data: Response) -> Unit,
-        onError: (error: Throwable) -> Unit
+        onSuccess: (data: Response) -> Unit = {},
+        onError: (error: Throwable) -> Unit = {}
     ): Disposable {
         return doOnSuccess {
             loadingState.dataReceived(it)
@@ -63,6 +64,8 @@ abstract class BaseLoadingViewModel<Response>(context: Context, networkListener:
             loadingState.startLoading()
         }.mapErrors {
             loadingState.onError(it)
+        }.doOnSuccess {
+            loadingState.dataReceived(it)
         }.subscribe({
             onSuccess(it)
         }, {
@@ -72,10 +75,22 @@ abstract class BaseLoadingViewModel<Response>(context: Context, networkListener:
 
 }
 
-abstract class BaseDisposableViewModel(val context: Context, networkListener: NetworkListener) :
+abstract class BaseDisposableViewModel(networkListener: NetworkListener) :
     ViewModel() {
 
     val compositeDisposable = CompositeDisposable()
+
+    val networkState: MutableLiveData<Boolean> = MutableLiveData()
+
+    init {
+        addDisposable(
+            networkListener.networkAvailable.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe {
+                    networkState.postValue(it)
+                }
+        )
+    }
 
     override fun onCleared() {
         compositeDisposable.clear()

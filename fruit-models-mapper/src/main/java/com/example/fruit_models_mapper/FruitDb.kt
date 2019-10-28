@@ -1,9 +1,16 @@
 package com.example.fruit_models_mapper
 
-import androidx.room.*
+import android.os.Parcelable
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.Index
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import com.logoped583.fruit_tools.ItemResponse
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 @Entity(
     tableName = "fruits",
     indices = [(Index(value = ["fruit_id"], unique = true))]
@@ -18,7 +25,8 @@ data class FruitDbEntity(
     val price: Int,
     @field:ColumnInfo(name = "image")
     val image: String
-) : ItemResponse {
+) : ItemResponse, Parcelable {
+    @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     var idL: Long = 0
@@ -26,19 +34,15 @@ data class FruitDbEntity(
 
 @Entity(
     tableName = "fruit_details",
-    indices = [(Index(value = ["fruit_id"], unique = true))],
-    foreignKeys = [ForeignKey(
-        entity = FruitDbEntity::class,
-        parentColumns = ["fruit_id"],
-        onDelete = ForeignKey.NO_ACTION,
-        childColumns = ["fruit_id"]
-    )]
+    indices = [(Index(value = ["fruit_id"], unique = true))]
 )
 data class FruitDetailsDbEntity(
     @field:ColumnInfo(name = "fruit_id")
+    @SerializedName("product_id")
     val fruitId: String,
     @field:ColumnInfo(name = "description")
-    val description: String
+    @SerializedName("description", alternate = ["decription"]) //F*CK OFF, I SPEND 30 MIN ON IT
+    val description: String? // AND 5 ON It
 ) {
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")

@@ -7,8 +7,11 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.material.snackbar.Snackbar
+import com.logoped583.fruit.R
 import io.reactivex.disposables.CompositeDisposable
 
 abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBinding> : Fragment() {
@@ -27,12 +30,10 @@ abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBind
 
     abstract val scope: ViewModelScope
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
+    private lateinit var snackbar: Snackbar
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
         viewModel = when (scope) {
             ViewModelScope.ACTIVITY -> ViewModelProviders.of(
                 requireActivity(),
@@ -43,6 +44,24 @@ abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBind
             )
         }
 
+        viewModel.networkState.observe(viewLifecycleOwner, Observer {
+            if (it == false) {
+                snackbar.show()
+            } else {
+                snackbar.dismiss()
+            }
+        })
+
+        applyBinding(savedInstanceState)
+    }
+
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
         binding = DataBindingUtil.inflate(layoutInflater, containerId, container, false)
 
         binding.lifecycleOwner = viewLifecycleOwner
@@ -52,7 +71,16 @@ abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBind
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        applyBinding()
+        snackbar = Snackbar.make(
+            view,
+            getString(R.string.no_network),
+            Snackbar.LENGTH_INDEFINITE
+        )
+    }
+
+    override fun onPause() {
+        snackbar.dismiss()
+        super.onPause()
     }
 
     enum class ViewModelScope {
@@ -65,6 +93,6 @@ abstract class BaseBindingFragment<V : BaseDisposableViewModel, D : ViewDataBind
         super.onDestroyView()
     }
 
-    abstract fun applyBinding()
+    abstract fun applyBinding(savedInstanceState: Bundle?)
 
 }

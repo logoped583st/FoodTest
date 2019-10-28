@@ -52,7 +52,7 @@ class FruitListDataSource @Inject constructor(
                     offset += 10
                     callback.onResult(it, null, offset)
                 }, {
-
+                    Timber.e(it.message)
                 })
         )
     }

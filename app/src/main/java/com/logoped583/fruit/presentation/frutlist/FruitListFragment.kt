@@ -1,5 +1,6 @@
 package com.logoped583.fruit.presentation.frutlist
 
+import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import com.example.fruit_models_mapper.FruitDbEntity
@@ -16,7 +17,7 @@ class FruitListFragment :
     Injectable {
 
     override val click: FruitDbEntity.(View) -> Unit = {
-
+        viewModel.navigateToDetails(this)
     }
 
     @Inject
@@ -34,7 +35,7 @@ class FruitListFragment :
     override val scope: ViewModelScope
         get() = ViewModelScope.ACTIVITY
 
-    override fun applyBinding() {
+    override fun applyBinding(savedInstanceState: Bundle?) {
         binding.viewModel = viewModel
         binding.viewGroupAnim = list_constraint
     }

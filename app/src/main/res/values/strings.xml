@@ -1,4 +1,6 @@
 <resources>
-    <string name="app_name">Fruits</string>
+    <string name="app_name">Food app</string>
     <string name="no_network">Dude, Internet is lost.</string>
+    <string name="no_description">Description not found</string>
+
 </resources>

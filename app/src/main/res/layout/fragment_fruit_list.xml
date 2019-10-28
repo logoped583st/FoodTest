@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
 
     <data>
 
@@ -13,28 +14,53 @@
             type="com.logoped583.fruit.presentation.frutlist.FruitListViewModel" />
     </data>
 
-
-    <com.example.fruit_cusom_view.list.BaseListConstraint
-        android:id="@+id/list_constraint"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:animateLayoutChanges="true"
-        android:focusableInTouchMode="true"
-        app:column_count="2"
-        app:horizontal_margin="8"
-        app:layout_manager="grid"
-        app:state="@{viewModel.state}"
-        app:vertical_margin="8">
+        android:orientation="vertical">
 
-        <include
-            layout="@layout/loading_view"
-            app:groupView="@{viewGroupAnim}"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:loadingState="@{viewModel.state}" />
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay"
+            app:title="@string/app_name"
+            app:titleTextColor="@color/white" />
 
-    </com.example.fruit_cusom_view.list.BaseListConstraint>
+        <com.example.fruit_cusom_view.list.BaseListConstraint
+            android:id="@+id/list_constraint"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
+            android:focusableInTouchMode="true"
+            app:column_count="2"
+            app:horizontal_margin="8"
+            app:layout_manager="grid"
+            bind:state="@{viewModel.state}"
+            app:vertical_margin="8">
 
+            <androidx.appcompat.widget.AppCompatTextView
+                style="@style/TextAppearance.AppCompat.Headline"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                bind:error="@{viewModel.state}" />
+
+            <include
+                layout="@layout/loading_view"
+                app:groupView="@{viewGroupAnim}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                bind:loadingState="@{viewModel.state}" />
+
+        </com.example.fruit_cusom_view.list.BaseListConstraint>
+    </LinearLayout>
 
 </layout>

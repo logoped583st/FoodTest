@@ -4,10 +4,8 @@ import android.os.Bundle
 import android.view.View
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.Observer
-import com.google.android.material.snackbar.Snackbar
 import com.jakewharton.rxbinding3.swiperefreshlayout.refreshes
 import com.logoped583.fruit.presentation.adapters.RecyclerAdapter
-import com.logoped583.fruit_tools.CustomExceptions
 import com.logoped583.fruit_tools.ItemResponse
 import com.logoped583.fruit_tools.ListResponse
 import kotlinx.android.synthetic.main.fragment_fruit_list.*
@@ -22,6 +20,11 @@ abstract class BaseListFragment<Response : ListResponse<I>, I : ItemResponse,
 
     abstract val click: I.(View) -> Unit
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        viewModel.dataSource.observe(viewLifecycleOwner, Observer(adapter::submitList))
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -32,18 +35,6 @@ abstract class BaseListFragment<Response : ListResponse<I>, I : ItemResponse,
             viewModel.clearPaging()
             viewModel.refresh()
         })
-
-
-        viewModel.dataSource.observe(viewLifecycleOwner, Observer(adapter::submitList))
-
-        viewModel.state.observe(viewLifecycleOwner, Observer {
-            when (it) {
-                is CustomExceptions -> Snackbar.make(view, it.message, Snackbar.LENGTH_LONG).show()
-            }
-        })
-
-
-
     }
 
 }

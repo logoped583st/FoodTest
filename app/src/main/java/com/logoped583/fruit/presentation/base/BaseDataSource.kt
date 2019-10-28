@@ -2,9 +2,11 @@ package com.logoped583.fruit.presentation.base
 
 import androidx.paging.PageKeyedDataSource
 import com.logoped583.fruit_tools.*
+import com.logoped583.fruit_tools.utils.callWhenInternetIsAvailable
 import com.logoped583.fruit_tools.utils.mapErrors
 import com.logoped583.fruit_tools.utils.retryIfTimeOut
 import io.reactivex.Single
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import timber.log.Timber
@@ -37,23 +39,35 @@ abstract class BaseDataSource<R : ListResponse<I>, I : ItemResponse> :
 
         compositeDisposable.add(
             networkListener.networkAvailable
-                .first(true)
+                .subscribeOn(Schedulers.io())
+                .firstOrError()
+                .flatMap {
+                    // test
+                    //throw Exception("TEST")
+                    if (it) {
+                        apiCall
+                    } else {
+                        initialDbCall.flatMap {
+                            if (it.items.isEmpty()) {
+                                callWhenInternetIsAvailable(
+                                    networkListener.networkAvailable,
+                                    apiCall
+                                )
+                            } else {
+                                Single.just(it)
+                            }
+                        }
+                    }
+                }
+                .retryIfTimeOut()
+                .observeOn(AndroidSchedulers.mainThread())
                 .mapErrors {
                     loadingStateImpl.onError(it)
                 }
-                .flatMap {
-                    if (it) {
-                        apiCall.subscribeOn(Schedulers.io())
-                    } else {
-                        initialDbCall.subscribeOn(Schedulers.io())
-                    }
-                }.retryIfTimeOut()
-                .subscribe({
-                    loadingStateImpl.dataReceived(it.items)
-                    onInitialResult(it, callback)
-                }, {
-                    Timber.e(it.message)
-                })
+                .subscribe({ data->
+                    loadingStateImpl.dataReceived(data.items)
+                    onInitialResult(data, callback)
+                },{})
         )
     }
 

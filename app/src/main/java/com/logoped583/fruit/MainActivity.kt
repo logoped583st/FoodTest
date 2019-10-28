@@ -55,4 +55,5 @@ class MainActivity : AppCompatActivity(), Injectable, HasAndroidInjector {
         cicerone.navigatorHolder.removeNavigator()
         super.onPause()
     }
+
 }

@@ -47,4 +47,5 @@ class GlobalModule(
     fun provideContext(): Context {
         return context
     }
+
 }

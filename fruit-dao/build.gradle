@@ -28,6 +28,7 @@ android {
 }
 
 def library = ext.libraries
+// TODO CHANGE ALL LIBRARIES WITH ${library.zzz} exclude duplicates
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
